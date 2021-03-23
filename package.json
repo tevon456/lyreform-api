@@ -1,0 +1,41 @@
+{
+  "name": "lyreform-api-postgress",
+  "version": "1.0.0",
+  "repository": "",
+  "description": "express js api service using postgressql for persistance",
+  "main": "index.js",
+  "scripts": {
+    "start": "pm2 start ecosystem.config.json --no-daemon",
+    "dev": "cross-env NODE_ENV=development nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "tevon456",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/joi": "^17.1.1",
+    "@sentry/node": "^6.2.2",
+    "@sentry/tracing": "^6.2.2",
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "date-fns": "^2.19.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-rate-limit": "^5.2.6",
+    "helmet": "^4.4.1",
+    "http-status": "^1.5.0",
+    "jsonwebtoken": "^8.5.1",
+    "mjml": "^4.9.0",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.5.0",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "pg": "^8.5.1",
+    "pg-hstore": "^2.3.3",
+    "pm2": "^4.5.5",
+    "sequelize": "^6.5.0",
+    "winston": "^3.3.3",
+    "xss-clean": "^0.1.1"
+  }
+}
