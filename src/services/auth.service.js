@@ -2,6 +2,7 @@ const httpStatus = require("http-status");
 const tokenService = require("./token.service");
 const userService = require("./user.service");
 const emailService = require("./email.service");
+const bcrypt = require("bcryptjs");
 const { Token } = require("../models");
 const { Op } = require("sequelize");
 const config = require("../config");
@@ -16,10 +17,13 @@ const differenceInHours = require("date-fns/differenceInHours");
  */
 const loginUserWithEmailAndPassword = async (email, password) => {
   const user = await userService.getUserByEmail(email);
-  if (!user || !(await user.isPasswordMatch(password))) {
+  if (!user || !(await bcrypt.compare(password, user.password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Incorrect email or password");
   }
-  if (user.confirmation.confirmed == false) {
+  if (user.active == false) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "This account has been banned");
+  }
+  if (user.verified == false) {
     throw new ApiError(
       httpStatus.PRECONDITION_FAILED,
       "Please verify your account by clicking the link sent to your email"
