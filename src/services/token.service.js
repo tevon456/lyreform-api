@@ -3,8 +3,8 @@ const { Token } = require("../models");
 const config = require("../config/index");
 const jwt = require("jsonwebtoken");
 const { Op } = require("sequelize");
-const addDays = require("date-fns/addDays");
 const ApiError = require("../utils/ApiError");
+const { addMinutes, addDays } = require("date-fns");
 
 /**
  * Generate token
@@ -64,6 +64,37 @@ const verifyToken = async (token, type) => {
 };
 
 /**
+ * Generate auth tokens
+ * @param {User} user
+ * @returns {Promise<Object>}
+ */
+const generateAuthTokens = async (user) => {
+  const accessTokenExpires = addMinutes(
+    new Date(),
+    config.jwt.access_expiration_minutes
+  );
+  const accessToken = generateToken(user, accessTokenExpires);
+
+  const refreshTokenExpires = addDays(
+    new Date(),
+    config.jwt.refresh_expiration_days
+  );
+  const refreshToken = generateToken(user, refreshTokenExpires);
+  await saveToken(refreshToken, user.id, refreshTokenExpires, "refresh");
+
+  return {
+    access: {
+      token: accessToken,
+      expires: Date.parse(accessTokenExpires),
+    },
+    refresh: {
+      token: refreshToken,
+      expires: Date.parse(refreshTokenExpires),
+    },
+  };
+};
+
+/**
  * Create a user account confirmation token
  * @param {User} user
  * @returns {Promise<User>}
@@ -93,6 +124,7 @@ module.exports = {
   generateToken,
   saveToken,
   verifyToken,
+  generateAuthTokens,
   generateConfirmationToken,
   destroyToken,
 };
