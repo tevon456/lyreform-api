@@ -4,7 +4,7 @@ const { password } = require("./custom.validation");
 const register = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().custom(password),
+    password: Joi.string().required().min(8).custom(password),
     name: Joi.string().max(48).min(3).required(),
   }),
 };
@@ -24,7 +24,7 @@ const resendConfirmation = {
 const login = {
   body: Joi.object().keys({
     email: Joi.string().required(),
-    password: Joi.string().required(),
+    password: Joi.string().required().min(8),
   }),
 };
 
