@@ -58,6 +58,7 @@
     "node-mocks-http": "^1.8.0",
     "nodemon": "^2.0.0",
     "prettier": "^2.0.5",
+    "sequelize-cli": "^6.2.0",
     "supertest": "^4.0.2"
   }
 }
