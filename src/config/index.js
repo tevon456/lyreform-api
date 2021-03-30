@@ -6,7 +6,10 @@ const config = {
     secret: process.env.JWT_SECRET,
     access_expiration_minutes: process.env.JWT_ACCESS_EXPIRATION_MINUTES,
     refresh_expiration_days: process.env.JWT_REFRESH_EXPIRATION_DAYS,
-    confirmation_expiration_days: process.env.JWT_CONFIRMATION_EXPIRATION_HOURS,
+    confirmation_expiration_hours:
+      process.env.JWT_CONFIRMATION_EXPIRATION_HOURS,
+    reset_password_expiration_hours:
+      process.env.JWT_RESET_PASSWORD_EXPIRATION_HOURS,
   },
   email: {
     host: process.env.SMTP_HOST,
