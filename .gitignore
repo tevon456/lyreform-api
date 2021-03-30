@@ -2,7 +2,7 @@
 node_modules
 
 # package-lock.json (use yarn.lock instead)
-package-lock.json
+# package-lock.json
 
 # yarn error logs
 yarn-error.log
