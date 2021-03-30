@@ -12,7 +12,7 @@ const {
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
   const userConfirmationToken = await tokenService.generateConfirmationToken(
-    user
+    user.email
   );
   // await emailService.sendAccountConfirmationEmail(
   //   user.email,
@@ -44,4 +44,28 @@ const login = catchAsync(async (req, res) => {
   res.send({ user, tokens });
 });
 
-module.exports = { register, accountConfirmation, resendConfirmation, login };
+const forgotPassword = catchAsync(async (req, res) => {
+  const user = await userService.getUserByEmail(req.body.email);
+  if (!user) {
+    res.status(httpStatus.NO_CONTENT).send();
+  }
+  const resetPasswordToken = await tokenService.generateResetPasswordToken(
+    user.email
+  );
+  await emailService.sendResetPasswordEmail(user.email, resetPasswordToken);
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
+const resetPassword = catchAsync(async (req, res) => {
+  await authService.resetPassword(req.query.token, req.body.password);
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
+module.exports = {
+  register,
+  accountConfirmation,
+  resendConfirmation,
+  login,
+  forgotPassword,
+  resetPassword,
+};
