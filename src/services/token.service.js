@@ -3,8 +3,9 @@ const { Token } = require("../models");
 const config = require("../config/index");
 const jwt = require("jsonwebtoken");
 const { Op } = require("sequelize");
+const userService = require("./user.service");
 const ApiError = require("../utils/ApiError");
-const { addMinutes, addDays } = require("date-fns");
+const { addMinutes, addDays, addHours } = require("date-fns");
 
 /**
  * Generate token
@@ -96,14 +97,40 @@ const generateAuthTokens = async (user) => {
 
 /**
  * Create a user account confirmation token
- * @param {User} user
+ * @param {string} email
  * @returns {Promise<User>}
  */
-const generateConfirmationToken = async (user) => {
-  const expires = addDays(new Date(), config.jwt.confirmation_expiration_days);
+const generateConfirmationToken = async (email) => {
+  const user = await userService.getUserByEmail(email);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "No users found with this email");
+  }
+  const expires = addHours(
+    new Date(),
+    config.jwt.confirmation_expiration_hours
+  );
   const confirmationToken = generateToken(user, expires);
   await saveToken(confirmationToken, user.id, expires, "confirmation");
   return confirmationToken;
+};
+
+/**
+ * Generate reset password token
+ * @param {string} email
+ * @returns {Promise<string>}
+ */
+const generateResetPasswordToken = async (email) => {
+  const user = await userService.getUserByEmail(email);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, "No users found with this email");
+  }
+  const expires = addHours(
+    new Date(),
+    config.jwt.reset_password_expiration_hours
+  );
+  const resetPasswordToken = generateToken(user.id, expires);
+  await saveToken(resetPasswordToken, user.id, expires, "resetPassword");
+  return resetPasswordToken;
 };
 
 /**
@@ -126,5 +153,6 @@ module.exports = {
   verifyToken,
   generateAuthTokens,
   generateConfirmationToken,
+  generateResetPasswordToken,
   destroyToken,
 };
