@@ -58,10 +58,16 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  User.beforeCreate(async (user, options) => {
-    const hashedPassword = await bcrypt.hash(user.password, 8);
-    user.password = hashedPassword;
-  });
+  async function hashPasswordOnChange(user, options) {
+    if (user.changed("password")) {
+      const hashedPassword = await bcrypt.hash(user.password, 8);
+      user.password = hashedPassword;
+    }
+  }
+
+  User.beforeCreate(hashPasswordOnChange);
+
+  User.beforeUpdate(hashPasswordOnChange);
 
   return User;
 };
