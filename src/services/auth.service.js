@@ -25,7 +25,7 @@ const loginUserWithEmailAndPassword = async (email, password) => {
   }
   if (user.verified == false) {
     throw new ApiError(
-      httpStatus.PRECONDITION_FAILED,
+      httpStatus.UNAUTHORIZED,
       "Please verify your account by clicking the link sent to your email"
     );
   }
