@@ -18,6 +18,7 @@ describe("Authentication Endpoints", () => {
           console.log(err);
           return done(err);
         }
+        console.log(res);
         expect(res.status).to.equal(201);
         expect(res.body).to.have.property("message");
         done();
