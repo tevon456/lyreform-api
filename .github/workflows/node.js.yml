@@ -20,7 +20,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:11.6-alpine
+        image: postgres
         env:
           POSTGRES_DB: ${{ env.DB_DATABASE }}
           POSTGRES_USER: ${{ env.DB_USERNAME }}
