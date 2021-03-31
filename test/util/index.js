@@ -15,7 +15,8 @@ class testHelperAuth {
   constructor(name, email, password) {
     this.name = name || faker.name.findName();
     this.email = email || faker.internet.email();
-    this.password = password || faker.internet.password(8, true, "[a-zA-Z0-9]");
+    this.password =
+      password || faker.internet.password(10, false, /[a-zA-Z0-9]/);
     this.confirmationToken = null;
   }
 
