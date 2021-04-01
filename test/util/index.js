@@ -1,4 +1,5 @@
 const faker = require("faker");
+const Database = require("../../src/models");
 const { Token } = require("../../src/models");
 const { userService } = require("../../src/services");
 
@@ -17,7 +18,6 @@ class testHelperAuth {
     this.email = email || faker.internet.email();
     this.password =
       password || faker.internet.password(10, false, /[a-zA-Z0-9]/);
-    this.confirmationToken = null;
   }
 
   async getConfirmationToken() {
@@ -89,4 +89,17 @@ class testHelperAuth {
   }
 }
 
-module.exports = { testHelperAuth };
+class testUtils {
+  static info(message) {
+    console.log("\x1b[36m%s\x1b[0m", message);
+  }
+  static warn(message) {
+    console.log("\x1b[36m%s\x1b[0m", message);
+  }
+
+  static async forceDatabaseSync() {
+    await Database.sequelize.sync({ force: true });
+  }
+}
+
+module.exports = { testHelperAuth, testUtils };
