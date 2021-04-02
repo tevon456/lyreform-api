@@ -128,7 +128,7 @@ const generateResetPasswordToken = async (email) => {
     new Date(),
     config.jwt.reset_password_expiration_hours
   );
-  const resetPasswordToken = generateToken(user.id, expires);
+  const resetPasswordToken = generateToken(user, expires);
   await saveToken(resetPasswordToken, user.id, expires, "resetPassword");
   return resetPasswordToken;
 };
