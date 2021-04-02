@@ -38,15 +38,19 @@ const loginUserWithEmailAndPassword = async (email, password) => {
  * @returns {Promise}
  */
 const logout = async (refreshToken) => {
-  const refreshTokenDoc = await Token.findOne({
-    token: refreshToken,
-    type: "refresh",
-    blacklisted: false,
+  const refreshTokenDocument = await Token.findOne({
+    where: {
+      [Op.and]: [
+        { token: refreshToken },
+        { blacklisted: false },
+        { type: "refresh" },
+      ],
+    },
   });
-  if (!refreshTokenDoc) {
+  if (!refreshTokenDocument) {
     throw new ApiError(httpStatus.NOT_FOUND, "Not found");
   }
-  await refreshTokenDoc.remove();
+  await refreshTokenDocument.destroy();
 };
 
 /**
@@ -56,15 +60,15 @@ const logout = async (refreshToken) => {
  */
 const refreshAuth = async (refreshToken) => {
   try {
-    const refreshTokenDoc = await tokenService.verifyToken(
+    const refreshTokenDocument = await tokenService.verifyToken(
       refreshToken,
       "refresh"
     );
-    const user = await userService.getUserById(refreshTokenDoc.user);
+    const user = await userService.getUserById(refreshTokenDocument.user_id);
     if (!user) {
       throw new Error();
     }
-    await refreshTokenDoc.remove();
+    await refreshTokenDocument.destroy();
     return tokenService.generateAuthTokens(user);
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, "Please authenticate");
