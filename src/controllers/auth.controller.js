@@ -1,6 +1,5 @@
 const httpStatus = require("http-status");
 const catchAsync = require("../utils/catchAsync");
-const differenceInHours = require("date-fns/differenceInHours");
 
 const {
   userService,
@@ -14,14 +13,13 @@ const register = catchAsync(async (req, res) => {
   const userConfirmationToken = await tokenService.generateConfirmationToken(
     user.email
   );
-  // await emailService.sendAccountConfirmationEmail(
-  //   user.email,
-  //   user.name,
-  //   userConfirmationToken
-  // );
+  await emailService.sendAccountConfirmationEmail(
+    user.email,
+    user.name,
+    userConfirmationToken
+  );
   res.status(httpStatus.CREATED).send({
     message: `Account created succesfully, check your email for account activation link`,
-    token: userConfirmationToken, //remove after
   });
 });
 
@@ -42,6 +40,16 @@ const login = catchAsync(async (req, res) => {
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const tokens = await tokenService.generateAuthTokens(user);
   res.send({ user, tokens });
+});
+
+const logout = catchAsync(async (req, res) => {
+  await authService.logout(req.body.refreshToken);
+  res.status(httpStatus.NO_CONTENT).send();
+});
+
+const refreshTokens = catchAsync(async (req, res) => {
+  const tokens = await authService.refreshAuth(req.body.refreshToken);
+  res.send({ ...tokens });
 });
 
 const forgotPassword = catchAsync(async (req, res) => {
@@ -66,6 +74,8 @@ module.exports = {
   accountConfirmation,
   resendConfirmation,
   login,
+  logout,
   forgotPassword,
   resetPassword,
+  refreshTokens,
 };
