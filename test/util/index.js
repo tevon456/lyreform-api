@@ -36,6 +36,8 @@ class testHelperAuth {
         false,
         /[a-zA-Z0-9]/
       )}${testUtils.randomBetween(0, 9)}`;
+    this.access = null;
+    this.refresh = null;
   }
 
   async getConfirmationToken() {
@@ -44,6 +46,14 @@ class testHelperAuth {
       where: { user_id: user.id, type: "confirmation" },
     });
     return tokenDocument;
+  }
+
+  setAccessToken(access) {
+    this.access = access;
+  }
+
+  setRefreshToken(refresh) {
+    this.refresh = refresh;
   }
 
   getUser() {
