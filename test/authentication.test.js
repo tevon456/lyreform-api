@@ -135,12 +135,84 @@ describe("Authentication Endpoints", () => {
           console.log(err);
           return done(err);
         }
+        user.setAccessToken(res.body.tokens.access.token);
+        user.setRefreshToken(res.body.tokens.refresh.token);
         expect(res.status).to.equal(200);
         expect(res.body).to.have.property("user");
         expect(res.body).to.have.property("tokens");
         expect(res.body.tokens).to.have.property("access");
         expect(res.body.tokens).to.have.property("refresh");
         expect(res.body.user).to.not.have.property("password");
+        done();
+      });
+  });
+
+  it("should return an error on bad auth token refresh", (done) => {
+    chai
+      .request(app)
+      .post(`/v1/auth/refresh-tokens`)
+      .send({ refreshToken: user.getBadRefreshToken() })
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          return done(err);
+        }
+        expect(res.status).to.equal(401);
+        expect(res.body).to.have.property("message");
+        done();
+      });
+  });
+
+  it("should refresh auth tokens", (done) => {
+    chai
+      .request(app)
+      .post(`/v1/auth/refresh-tokens`)
+      .send({ refreshToken: user.refresh })
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          console.log(res.body);
+          return done(err);
+        }
+        user.setAccessToken(res.body.tokens.access.token);
+        user.setRefreshToken(res.body.tokens.refresh.token);
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property("tokens");
+        expect(res.body.tokens).to.have.property("access");
+        expect(res.body.tokens).to.have.property("refresh");
+        done();
+      });
+  });
+
+  it("should throw an error when logging out with incorrect refresh token", (done) => {
+    chai
+      .request(app)
+      .post(`/v1/auth/logout`)
+      .send({ refreshToken: user.getBadRefreshToken() })
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          return done(err);
+        }
+        expect(res.status).to.not.equal(500);
+        expect(res.status).to.equal(401);
+        expect(res.body).to.have.property("message");
+        done();
+      });
+  });
+
+  it("should logout user", (done) => {
+    chai
+      .request(app)
+      .post(`/v1/auth/logout`)
+      .send({ refreshToken: user.refresh })
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          return done(err);
+        }
+        expect(res.status).to.not.equal(500);
+        expect(res.status).to.equal(204);
         done();
       });
   });
