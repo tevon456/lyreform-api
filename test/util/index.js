@@ -56,6 +56,10 @@ class testHelperAuth {
     this.refresh = refresh;
   }
 
+  getBadRefreshToken() {
+    return `${this.refresh}k98`;
+  }
+
   getUser() {
     return {
       ...this,
