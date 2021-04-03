@@ -48,7 +48,7 @@ const logout = async (refreshToken) => {
     },
   });
   if (!refreshTokenDocument) {
-    throw new ApiError(httpStatus.NOT_FOUND, "Not found");
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Unauthorized");
   }
   await refreshTokenDocument.destroy();
 };
