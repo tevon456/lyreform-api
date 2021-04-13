@@ -31,6 +31,7 @@ function passwordResetTemplate(passwordResetLink) {
         <mj-button background-color="#424651" color="#fff" align="left" border="2px solid #fff" href="https://lyreform.com/">Visit Lyreform.com</mj-button>
       </mj-column>
     </mj-section>
+    <mj-section padding-bottom="10%"></mj-section>
   </mj-body>
 </mjml>
   `

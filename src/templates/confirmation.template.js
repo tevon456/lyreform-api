@@ -27,11 +27,12 @@ function confirmationTemplate(name, confirmationLink) {
         <mj-text font-size="14px" color="#525252" font-weight="700">The Lyreform Team</mj-text>
       </mj-column>
     </mj-section>
-    <mj-section background-color="#424651" border="1px solid #e9e9e9" padding="30px" paddin-bottom="10%" border-radius="4px 4px 0px 0px">
+    <mj-section background-color="#424651" border="1px solid #e9e9e9" padding="30px" border-radius="4px 4px 0px 0px">
       <mj-column width="400px" background-color="#424651">
         <mj-button background-color="#424651" color="#fff" align="left" border="2px solid #fff" href="https://lyreform.com/">Visit Lyreform.com</mj-button>
       </mj-column>
     </mj-section>
+     <mj-section padding-bottom="10%"></mj-section>
   </mj-body>
 </mjml>
   `
