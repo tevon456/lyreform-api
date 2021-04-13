@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const { Op } = require("sequelize");
 const userService = require("./user.service");
 const ApiError = require("../utils/ApiError");
-const { addMinutes, addDays, addHours } = require("date-fns");
+const { addMinutes, addDays, addHours, isPast } = require("date-fns");
 
 /**
  * Generate token
@@ -124,13 +124,36 @@ const generateResetPasswordToken = async (email) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "No users found with this email");
   }
-  const expires = addHours(
-    new Date(),
-    config.jwt.reset_password_expiration_hours
-  );
-  const resetPasswordToken = generateToken(user, expires);
-  await saveToken(resetPasswordToken, user.id, expires, "resetPassword");
-  return resetPasswordToken;
+
+  const query = {
+    where: {
+      [Op.and]: [{ user_id: user.id }, { type: "resetPassword" }],
+    },
+  };
+
+  const existingToken = await Token.findOne(query);
+
+  const prepareToken = async () => {
+    const expires = addHours(
+      new Date(),
+      config.jwt.reset_password_expiration_hours
+    );
+    const resetPasswordToken = generateToken(user, expires);
+    await saveToken(resetPasswordToken, user.id, expires, "resetPassword");
+    return resetPasswordToken;
+  };
+
+  if (!existingToken) {
+    Token.destroy(query);
+    return prepareToken();
+  }
+
+  if (existingToken && isPast(existingToken.expires_at)) {
+    await existingToken.destroy();
+    return prepareToken();
+  }
+
+  return existingToken;
 };
 
 /**
