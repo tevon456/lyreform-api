@@ -2,6 +2,7 @@ const nodemailer = require("nodemailer");
 const config = require("../config/");
 const logger = require("../utils/logger");
 const confirmationTemplate = require("../templates/confirmation.template");
+const passwordResetTemplate = require("../templates/passwordReset.template");
 
 const transport = nodemailer.createTransport(config.email);
 /* istanbul ignore next */
@@ -45,7 +46,8 @@ const sendResetPasswordEmail = async (to, token) => {
   const text = `Dear user,
   To reset your password, click on this link: ${resetPasswordUrl}
   If you did not request any password resets, then ignore this email.`;
-  await sendEmail(to, subject, text);
+  const html = passwordResetTemplate(resetPasswordUrl);
+  await sendEmail(to, subject, text, html);
 };
 
 /**
