@@ -48,6 +48,14 @@ class testHelperAuth {
     return tokenDocument;
   }
 
+  async getResetPasswordToken() {
+    const user = await userService.getUserByEmail(this.email);
+    const tokenDocument = await Token.findOne({
+      where: { user_id: user.id, type: "resetPassword" },
+    });
+    return tokenDocument;
+  }
+
   setAccessToken(access) {
     this.access = access;
   }
@@ -118,6 +126,22 @@ class testHelperAuth {
 
   getEmail() {
     return this.email;
+  }
+
+  getBadEmail() {
+    return this.email.split(".")[0];
+  }
+
+  generatePassword() {
+    return `${faker.internet.password(
+      10,
+      false,
+      /[a-zA-Z0-9]/
+    )}${testUtils.randomBetween(0, 9)}`;
+  }
+
+  setPassword(password) {
+    this.password = password;
   }
 }
 

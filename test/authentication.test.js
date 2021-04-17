@@ -216,4 +216,117 @@ describe("Authentication Endpoints", () => {
         done();
       });
   });
+
+  it("should initiate a bad forgot password request with no email", (done) => {
+    chai
+      .request(app)
+      .post(`/v1/auth/forgot-password`)
+      .send()
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          return done(err);
+        }
+        expect(res.status).to.not.equal(500);
+        expect(res.status).to.equal(400);
+        expect(res.body).to.have.property("code");
+        expect(res.body.code).to.equal(400);
+        expect(res.body).to.have.property("message");
+        done();
+      });
+  });
+
+  it("should initiate a bad forgot password request with malformed email", (done) => {
+    chai
+      .request(app)
+      .post(`/v1/auth/forgot-password`)
+      .send({ email: user.getBadEmail() })
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          return done(err);
+        }
+        expect(res.status).to.not.equal(500);
+        expect(res.status).to.equal(400);
+        expect(res.body).to.have.property("code");
+        expect(res.body.code).to.equal(400);
+        expect(res.body).to.have.property("message");
+        done();
+      });
+  });
+
+  it("should initiate a forgot password", (done) => {
+    chai
+      .request(app)
+      .post(`/v1/auth/forgot-password`)
+      .send({ email: user.email })
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          return done(err);
+        }
+        expect(res.status).to.not.equal(500);
+        expect(res.status).to.not.equal(400);
+        expect(res.status).to.equal(204);
+        done();
+      });
+  });
+
+  it("should reset password using token", async () => {
+    const tokenDocument = await user.getResetPasswordToken();
+    const token = tokenDocument.token;
+    const newPassword = user.generatePassword();
+    chai
+      .request(app)
+      .post(`/v1/auth/reset-password/?token=${token}`)
+      .send({ password: newPassword })
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          return done(err);
+        }
+        user.setPassword(newPassword);
+        expect(res.status).to.not.equal(500);
+        expect(res.status).to.not.equal(400);
+        expect(res.status).to.equal(204);
+      });
+  });
+
+  it("should login user", (done) => {
+    chai
+      .request(app)
+      .post(`/v1/auth/login`)
+      .send(user.getUserLogin())
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          return done(err);
+        }
+        user.setAccessToken(res.body.tokens.access.token);
+        user.setRefreshToken(res.body.tokens.refresh.token);
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property("user");
+        expect(res.body).to.have.property("tokens");
+        expect(res.body.tokens).to.have.property("access");
+        expect(res.body.tokens).to.have.property("refresh");
+        expect(res.body.user).to.not.have.property("password");
+        done();
+      });
+  });
+
+  it("should logout user", (done) => {
+    chai
+      .request(app)
+      .post(`/v1/auth/logout`)
+      .send({ refreshToken: user.refresh })
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          return done(err);
+        }
+        expect(res.status).to.not.equal(500);
+        expect(res.status).to.equal(204);
+        done();
+      });
+  });
 });
