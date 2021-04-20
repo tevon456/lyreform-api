@@ -60,6 +60,15 @@ const getUserByEmail = async (email) => {
 };
 
 /**
+ * Get a user id by uuid
+ * @param {string} uuid
+ * @returns {Promise<number>}
+ */
+const getUserIdfromUUID = async (uuid) => {
+  return User.findOne({ attributes: ["id"], where: { uuid } });
+};
+
+/**
  * Update user by id
  * @param {number} userId
  * @param {Object} updateBody
@@ -80,6 +89,7 @@ module.exports = {
   getUserById,
   getUserByEmail,
   getUserByUuid,
+  getUserIdfromUUID,
   updateUserById,
   isEmailTaken,
 };
