@@ -21,7 +21,7 @@ server = app.listen(config.port, () => {
     .catch((error) => {
       logger.error(`Unable to connect to the database: ${error}.`);
     });
-  DBsync();
+  // DBsync();
 });
 
 const exitHandler = () => {
