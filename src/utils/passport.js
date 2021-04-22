@@ -1,3 +1,4 @@
+const { isPast, fromUnixTime } = require("date-fns");
 const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
 const config = require("../config/");
 const User = require("../services/user.service");
@@ -11,6 +12,9 @@ const jwtOptions = {
 const jwtVerify = async (payload, done) => {
   try {
     if (payload.data.type != "access") {
+      return done(null, false);
+    }
+    if (isPast(fromUnixTime(payload.exp))) {
       return done(null, false);
     }
     const user = await User.getUserById(payload.sub);
