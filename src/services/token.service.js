@@ -5,7 +5,13 @@ const jwt = require("jsonwebtoken");
 const { Op } = require("sequelize");
 const userService = require("./user.service");
 const ApiError = require("../utils/ApiError");
-const { addMinutes, addDays, addHours, isPast } = require("date-fns");
+const {
+  addMinutes,
+  addDays,
+  addHours,
+  isPast,
+  getUnixTime,
+} = require("date-fns");
 
 /**
  * Generate token
@@ -20,8 +26,8 @@ const generateToken = (data, expires, secret = config.jwt.secret) => {
     email: data.user.email,
     data: data.bundle,
     sub: data.user.id,
-    iat: Date.now(),
-    exp: Date.parse(expires),
+    iat: getUnixTime(Date.now()),
+    exp: getUnixTime(expires),
   };
   return jwt.sign(payload, secret);
 };
