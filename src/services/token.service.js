@@ -14,11 +14,12 @@ const { addMinutes, addDays, addHours, isPast } = require("date-fns");
  * @param {string} [secret]
  * @returns {string}
  */
-const generateToken = (user, expires, secret = config.jwt.secret) => {
+const generateToken = (data, expires, secret = config.jwt.secret) => {
   const payload = {
-    name: user.name,
-    email: user.email,
-    sub: user.id,
+    name: data.user.name,
+    email: data.user.email,
+    data: data.bundle,
+    sub: data.user.id,
     iat: Date.now(),
     exp: Date.parse(expires),
   };
@@ -74,13 +75,19 @@ const generateAuthTokens = async (user) => {
     new Date(),
     config.jwt.access_expiration_minutes
   );
-  const accessToken = generateToken(user, accessTokenExpires);
+  const accessToken = generateToken(
+    { bundle: { type: "access" }, user },
+    accessTokenExpires
+  );
 
   const refreshTokenExpires = addDays(
     new Date(),
     config.jwt.refresh_expiration_days
   );
-  const refreshToken = generateToken(user, refreshTokenExpires);
+  const refreshToken = generateToken(
+    { bundle: { type: "refresh" }, user },
+    refreshTokenExpires
+  );
   await saveToken(refreshToken, user.id, refreshTokenExpires, "refresh");
 
   return {
@@ -109,7 +116,10 @@ const generateConfirmationToken = async (email) => {
     new Date(),
     config.jwt.confirmation_expiration_hours
   );
-  const confirmationToken = generateToken(user, expires);
+  const confirmationToken = generateToken(
+    { bundle: { type: "confirmation" }, user },
+    expires
+  );
   await saveToken(confirmationToken, user.id, expires, "confirmation");
   return confirmationToken;
 };
@@ -138,7 +148,10 @@ const generateResetPasswordToken = async (email) => {
       new Date(),
       config.jwt.reset_password_expiration_hours
     );
-    const resetPasswordToken = generateToken(user, expires);
+    const resetPasswordToken = generateToken(
+      { bundle: { type: "resetPassword" }, user },
+      expires
+    );
     await saveToken(resetPasswordToken, user.id, expires, "resetPassword");
     return resetPasswordToken;
   };
