@@ -1,14 +1,20 @@
 const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
 const config = require("../config/");
 const User = require("../services/user.service");
+const Token = require("../services/token.service");
+const { data } = require("./logger");
 
 const jwtOptions = {
   secretOrKey: config.jwt.secret,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  passReqToCallback: false,
 };
 
 const jwtVerify = async (payload, done) => {
   try {
+    if (payload.data.type != "access") {
+      return done(null, false);
+    }
     const user = await User.getUserById(payload.sub);
     if (!user) {
       return done(null, false);
