@@ -1,13 +1,13 @@
 const app = require("../src/app");
 const chai = require("chai");
 const chaiHttp = require("chai-http");
-const { testHelperAuth } = require("./util");
+const { testHelper } = require("./util");
 const expect = require("chai").expect;
 
-let user = new testHelperAuth();
+let user = new testHelper();
 chai.use(chaiHttp);
 
-describe("Authentication Endpoints", () => {
+describe("Autehtication rest enpoint testing", () => {
   it("should 'register' a new user", (done) => {
     chai
       .request(app)
@@ -19,6 +19,8 @@ describe("Authentication Endpoints", () => {
           console.log(res);
           return done(err);
         }
+        console.log(err);
+        console.log(res);
         expect(res.status).to.equal(201);
         expect(res.body).to.have.property("message");
         done();
