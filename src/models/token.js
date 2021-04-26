@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
   Token.init(
     {
       token: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(500),
         allowNull: false,
       },
       type: {
