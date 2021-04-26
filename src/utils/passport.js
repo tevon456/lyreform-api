@@ -1,12 +1,11 @@
 const { isPast, fromUnixTime } = require("date-fns");
 const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
-const config = require("../config/");
+const config = require("../config");
 const User = require("../services/user.service");
 
 const jwtOptions = {
   secretOrKey: config.jwt.secret,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  passReqToCallback: false,
 };
 
 const jwtVerify = async (payload, done) => {
