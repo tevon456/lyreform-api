@@ -19,8 +19,6 @@ describe("Autehtication rest enpoint testing", () => {
           console.log(res);
           return done(err);
         }
-        console.log(err);
-        console.log(res);
         expect(res.status).to.equal(201);
         expect(res.body).to.have.property("message");
         done();
