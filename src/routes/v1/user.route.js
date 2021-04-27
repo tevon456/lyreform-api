@@ -8,7 +8,7 @@ const router = express.Router();
 
 router
   .route("/:userId")
-  .get(auth(), validate(userValidation.getUser), userController.getUser);
+  .get(auth(), validate(userValidation.getUser), userController.getUser); //TODO Restablish other user routes
 // .patch(auth(), validate(userValidation.updateUser), userController.updateUser)
 // .delete(
 //   auth(),
