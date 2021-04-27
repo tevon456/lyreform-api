@@ -7,7 +7,7 @@ const userRoute = require("./user.route");
 const router = express.Router();
 
 router.use("/auth", authRoute);
-router.use("/users", userRoute);
+router.use("/user", userRoute);
 // router.use('/forms', formRoute);
 // router.use('/submissions', submissionRoute);
 
