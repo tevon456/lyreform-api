@@ -32,6 +32,7 @@ class testHelper {
       )}${testUtils.randomBetween(0, 9)}`;
     this.access = null;
     this.refresh = null;
+    this.uuid = null;
   }
 
   async getConfirmationToken() {
@@ -56,6 +57,10 @@ class testHelper {
 
   setRefreshToken(refresh) {
     this.refresh = refresh;
+  }
+
+  setUserUUID(uuid) {
+    this.uuid = uuid;
   }
 
   getBadRefreshToken() {
