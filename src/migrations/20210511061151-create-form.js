@@ -29,11 +29,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      foreground: {
+      body_foreground: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      background: {
+      body_background: {
         type: Sequelize.STRING,
         allowNull: false,
       },

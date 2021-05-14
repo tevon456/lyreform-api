@@ -38,11 +38,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      foreground: {
+      body_foreground: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      background: {
+      body_background: {
         type: DataTypes.STRING,
         allowNull: false,
       },
