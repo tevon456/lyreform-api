@@ -1,3 +1,5 @@
+const chroma = require("chroma-js");
+
 const password = (value, helpers) => {
   if (value.length < 8) {
     return helpers.message("password must be at least 8 characters");
@@ -10,6 +12,14 @@ const password = (value, helpers) => {
   return value;
 };
 
+const color = (value, helpers) => {
+  if (!chroma.valid(value)) {
+    return helpers.message("this value should be a valid color");
+  }
+  return value;
+};
+
 module.exports = {
   password,
+  color,
 };
