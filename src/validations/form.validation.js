@@ -31,6 +31,12 @@ const createForm = {
   }),
 };
 
+const getForm = {
+  params: Joi.object().keys({
+    formId: Joi.string().required(),
+  }),
+};
+
 const updateForm = {
   params: Joi.object().keys({
     formId: Joi.string().required(),
@@ -72,6 +78,7 @@ const deleteForm = {
 
 module.exports = {
   createForm,
+  getForm,
   updateForm,
   deleteForm,
 };
