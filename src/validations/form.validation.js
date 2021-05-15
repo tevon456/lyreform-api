@@ -39,10 +39,10 @@ const getForm = {
 
 const getForms = {
   query: Joi.object().keys({
-    published: Joi.number().integer(),
+    published: Joi.number().integer().min(0).max(1),
     name: Joi.string(),
     sortBy: Joi.string(),
-    limit: Joi.number().integer(),
+    limit: Joi.number().integer().max(50),
     page: Joi.number().integer(),
   }),
 };
