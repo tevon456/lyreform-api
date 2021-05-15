@@ -37,6 +37,16 @@ const getForm = {
   }),
 };
 
+const getForms = {
+  query: Joi.object().keys({
+    published: Joi.number().integer(),
+    name: Joi.string(),
+    sortBy: Joi.string(),
+    limit: Joi.number().integer(),
+    page: Joi.number().integer(),
+  }),
+};
+
 const updateForm = {
   params: Joi.object().keys({
     formId: Joi.string().required(),
@@ -79,6 +89,7 @@ const deleteForm = {
 module.exports = {
   createForm,
   getForm,
+  getForms,
   updateForm,
   deleteForm,
 };
