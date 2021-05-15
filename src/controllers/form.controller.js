@@ -1,6 +1,7 @@
 const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
 const catchAsync = require("../utils/catchAsync");
+const pick = require("../utils/pick");
 const { formService } = require("../services");
 
 const createForm = catchAsync(async (req, res) => {
@@ -39,6 +40,13 @@ const getForm = catchAsync(async (req, res) => {
   }
 });
 
+const getForms = catchAsync(async (req, res) => {
+  const filter = pick(req.query, ["name", "published"]);
+  const options = pick(req.query, ["sortBy", "limit", "page"]);
+  const results = await formService.getUserForms(req.user.id, filter, options);
+  res.send(results);
+});
+
 const updateForm = catchAsync(async (req, res) => {
   const form = await formService.getFormByUUID(req.params.formId);
   if (!form) {
@@ -57,7 +65,7 @@ const deleteForm = catchAsync(async (req, res) => {
   if (!form) {
     throw new ApiError(httpStatus.NOT_FOUND, "Form not found");
   }
-  if (req.user.id !== form.user_id) {
+  if (form.user_id !== req.user.id) {
     throw new ApiError(httpStatus.FORBIDDEN, "Not auhtorized");
   }
   await formService.deleteFormById(form.id);
@@ -67,6 +75,7 @@ const deleteForm = catchAsync(async (req, res) => {
 module.exports = {
   createForm,
   getForm,
+  getForms,
   updateForm,
   deleteForm,
 };
