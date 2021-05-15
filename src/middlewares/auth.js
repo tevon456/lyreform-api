@@ -19,7 +19,7 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (
   //       userRights.includes(requiredRight)
   //     );
   //     if (!hasRequiredRights && req.params.userId !== user.id) {
-  //       return reject(new ApiError(httpStatus.FORBIDDEN, "Forbidden"));
+  //       return reject(new ApiError(httpStatus.FORBIDDEN, "Not authorized"));
   //     }
   //   }
 
