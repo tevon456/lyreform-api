@@ -36,17 +36,38 @@ const getFormByUUID = async (uuid) => {
  * @param {string} filter.name - filter by form name
  * @param {number} filter.published - filter by published 1 = true, 0 = false
  * @param {string} options.sortyBy - sort by [name,created_at,updated_at] in asc / desc order
- * @param {string} options.limit - number of results per page
- * @param {string} options.page - result page that auto calculates the offset
- * @returns {Promise<Form>}
+ * @param {number} options.limit - number of results per page
+ * @param {number} options.page - result page that auto calculates the offset
+ * @returns {Promise<PaginatedForms>}
  */
 const getUserForms = async (userId, filter, options) => {
-  const sort = {};
+  const sort = [];
+  const allowed = ["name", "created_at", "updated_at"]; //allowed sortBy fields
+
   if (options.sortBy) {
-    const parts = options.sortBy.split(":");
-    sort[parts[0]] = parts[1] === "desc" ? "DESC" : "ASC";
+    const parts = options.sortBy.split(","); // split sortBy params comma delimited into array of parts
+    parts.map((part, index) => {
+      sort[index] = part.split(":");
+      sort[index][1] = sort[index][1] === "desc" ? "DESC" : "ASC";
+      if (!allowed.includes(sort[index][0])) {
+        //Throw an error if the sortBy param is not allowed
+        const formatter = new Intl.ListFormat("en", {
+          style: "long",
+          type: "conjunction",
+        });
+        throw new ApiError(
+          httpStatus.BAD_REQUEST,
+          `${
+            sort[index][0]
+          } is not an allowed sortBy param, allowed params include: ${formatter.format(
+            allowed
+          )} `
+        );
+      }
+    });
   }
-  //TODO Limit sort to use only allowed ordery by
+
+  // Prepare or calculate limit, page and offset
   const limit =
     options.limit && parseInt(options.limit, 10) > 0
       ? parseInt(options.limit, 10)
@@ -67,14 +88,14 @@ const getUserForms = async (userId, filter, options) => {
     offset: offset,
     limit: limit,
   });
-  result = {
+
+  return {
     total_results: count,
     results: rows,
     limit,
     current_page: page,
     total_pages: Math.ceil(count / limit),
   };
-  return result;
 };
 
 /**
