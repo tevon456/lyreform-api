@@ -44,6 +44,9 @@ const getForms = catchAsync(async (req, res) => {
   const filter = pick(req.query, ["name", "published"]);
   const options = pick(req.query, ["sortBy", "limit", "page"]);
   const results = await formService.getUserForms(req.user.id, filter, options);
+  if (!results) {
+    throw new ApiError(httpStatus.NOT_FOUND, "Form not found");
+  }
   res.send(results);
 });
 
@@ -53,7 +56,7 @@ const updateForm = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.NOT_FOUND, "Form not found");
   }
   if (form.user_id !== req.user.id) {
-    throw new ApiError(httpStatus.FORBIDDEN, "Not auhtorized");
+    throw new ApiError(httpStatus.FORBIDDEN, "Not authorized");
   }
 
   const updatedForm = await formService.updateFormById(form.id, req.body);
@@ -66,7 +69,7 @@ const deleteForm = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.NOT_FOUND, "Form not found");
   }
   if (form.user_id !== req.user.id) {
-    throw new ApiError(httpStatus.FORBIDDEN, "Not auhtorized");
+    throw new ApiError(httpStatus.FORBIDDEN, "Not authorized");
   }
   await formService.deleteFormById(form.id);
   res.status(httpStatus.NO_CONTENT).send();
