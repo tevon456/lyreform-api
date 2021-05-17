@@ -64,7 +64,7 @@ const updateForm = catchAsync(async (req, res) => {
 });
 
 const deleteForm = catchAsync(async (req, res) => {
-  const form = await formService.getFormById(req.params.formId);
+  const form = await formService.getFormByUUID(req.params.formId);
   if (!form) {
     throw new ApiError(httpStatus.NOT_FOUND, "Form not found");
   }
