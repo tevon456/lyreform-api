@@ -3,7 +3,7 @@ const { password } = require("./custom.validation");
 
 const register = {
   body: Joi.object().keys({
-    email: Joi.string().required().email(),
+    email: Joi.string().email().required(),
     password: Joi.string().required().min(8).custom(password),
     name: Joi.string().max(48).min(3).required(),
   }),
@@ -17,14 +17,14 @@ const accountConfirmation = {
 
 const resendConfirmation = {
   body: Joi.object().keys({
-    email: Joi.string().required().email(),
+    email: Joi.string().email().required(),
   }),
 };
 
 const login = {
   body: Joi.object().keys({
-    email: Joi.string().required(),
-    password: Joi.string().required().min(8),
+    email: Joi.string().email().required(),
+    password: Joi.string().required().min(8).custom(password),
   }),
 };
 
@@ -51,7 +51,7 @@ const resetPassword = {
     token: Joi.string().required(),
   }),
   body: Joi.object().keys({
-    password: Joi.string().required().custom(password),
+    password: Joi.string().required().min(8).custom(password),
   }),
 };
 
