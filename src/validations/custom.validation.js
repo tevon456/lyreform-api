@@ -13,8 +13,11 @@ const password = (value, helpers) => {
 };
 
 const color = (value, helpers) => {
+  let field = helpers.state.path[1];
   if (!chroma.valid(value)) {
-    return helpers.message("this value should be a valid color");
+    return helpers.message(
+      `${field} should be a valid color, supported color formats are: hexadecimal, rgba and hsl`
+    );
   }
   return value;
 };
