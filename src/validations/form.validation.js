@@ -14,7 +14,6 @@ const createForm = {
     controls_background: Joi.string().required().custom(color),
     page_background: Joi.string().required().custom(color),
     fields: Joi.array()
-      .required()
       .items({
         id: Joi.string().required(),
         name: Joi.string().required(),
@@ -27,13 +26,14 @@ const createForm = {
         options: Joi.array().items({
           value: Joi.alternatives().try(Joi.string(), Joi.array()),
         }),
-      }),
+      })
+      .required(),
   }),
 };
 
 const getForm = {
   params: Joi.object().keys({
-    formId: Joi.string().required(),
+    formId: Joi.string().uuid().required(),
   }),
 };
 
@@ -42,14 +42,14 @@ const getForms = {
     published: Joi.number().integer().min(0).max(1),
     name: Joi.string(),
     sortBy: Joi.string(),
-    limit: Joi.number().integer().max(50),
+    limit: Joi.number().integer().max(50).min(5),
     page: Joi.number().integer(),
   }),
 };
 
 const updateForm = {
   params: Joi.object().keys({
-    formId: Joi.string().required(),
+    formId: Joi.string().uuid().required(),
   }),
   body: Joi.object().keys({
     name: Joi.string().max(128).min(3).required(),
@@ -82,7 +82,7 @@ const updateForm = {
 
 const deleteForm = {
   params: Joi.object().keys({
-    formId: Joi.string().required(),
+    formId: Joi.string().uuid().required(),
   }),
 };
 
