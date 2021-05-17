@@ -31,11 +31,11 @@ const getFormByUUID = async (uuid) => {
 };
 
 /**
- * Get userform by id
+ * Get user forms by id
  * @param {number} userId
  * @param {string} filter.name - filter by form name
  * @param {number} filter.published - filter by published 1 = true, 0 = false
- * @param {string} options.sortyBy - sort by [name,created_at,updated_at] in asc / desc order
+ * @param {string} options.sortBy - sort by [name,created_at,updated_at] in asc / desc order
  * @param {number} options.limit - number of results per page
  * @param {number} options.page - result page that auto calculates the offset
  * @returns {Promise<PaginatedForms>}
@@ -43,7 +43,6 @@ const getFormByUUID = async (uuid) => {
 const getUserForms = async (userId, filter, options) => {
   const sort = [];
   const allowed = ["name", "created_at", "updated_at"]; //allowed sortBy fields
-
   if (options.sortBy) {
     const parts = options.sortBy.split(","); // split sortBy params comma delimited into array of parts
     parts.map((part, index) => {
@@ -85,6 +84,7 @@ const getUserForms = async (userId, filter, options) => {
       },
       ...filter,
     },
+    order: sort,
     offset: offset,
     limit: limit,
   });
