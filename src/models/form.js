@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     }
     // exclude fields from model when returning json
     toJSON() {
-      return { ...this.get(), id: undefined };
+      return { ...this.get(), id: undefined, UserId: undefined };
     }
   }
   Form.init(
