@@ -33,6 +33,7 @@ class testHelper {
     this.access = null;
     this.refresh = null;
     this.uuid = null;
+    this.form_ids = [];
   }
 
   async getConfirmationToken() {
@@ -141,6 +142,64 @@ class testHelper {
 
   setPassword(password) {
     this.password = password;
+  }
+
+  generateForm() {
+    return {
+      name: `API Test form ${testUtils.randomBetween(1, 40)}`,
+      published: true,
+      header_foreground: "white",
+      header_background: "black",
+      body_foreground: "black",
+      body_background: "white",
+      controls_foreground: "white",
+      controls_background: "black",
+      page_background: "white",
+      fields: [
+        {
+          id: faker.random.alphaNumeric(6),
+          name: `email-123 ${faker.random.alphaNumeric(6)}`,
+          label: "email address",
+          field_type: "EMAIL",
+          required: true,
+        },
+      ],
+    };
+  }
+
+  badFormCreate() {
+    let seed = testUtils.randomBetween(1, 4);
+    switch (seed) {
+      case 1:
+        return {
+          ...this.generateForm(),
+          name: undefined,
+        };
+      case 2:
+        return {
+          ...this.generateForm(),
+          non_existent: faker.random.alphaNumeric(12),
+        };
+      case 3:
+        return {
+          ...this.generateForm(),
+          fields: undefined,
+        };
+      case 4:
+        return {
+          ...this.generateForm(),
+          header_background: faker.random.alpha({ count: 8, upcase: false }),
+        };
+      default:
+        return {
+          ...this.generateForm(),
+          name: undefined,
+        };
+    }
+  }
+
+  addUserFormUUID(uuid) {
+    this.form_ids.push(uuid);
   }
 }
 
