@@ -22,7 +22,7 @@ const getForm = catchAsync(async (req, res) => {
   */
   if (req.user) {
     if (req.user.id === form.user_id && form.published === false) {
-      res.json(form);
+      res.send(form);
     } else if (req.user.id !== form.user_id && form.published === false) {
       throw new ApiError(httpStatus.NOT_FOUND, "Form not found");
     } else {
