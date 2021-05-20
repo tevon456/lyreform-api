@@ -7,7 +7,7 @@ const expect = require("chai").expect;
 let user = new testHelper();
 chai.use(chaiHttp);
 
-describe("Autehtication rest enpoint testing", () => {
+describe("Authenticate rest endpoint testing", () => {
   it("should 'register' a new user", (done) => {
     chai
       .request(app)
