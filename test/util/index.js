@@ -188,7 +188,7 @@ class testHelper {
       case 4:
         return {
           ...this.generateForm(),
-          header_background: faker.random.alpha({ count: 8, upcase: false }),
+          header_background: faker.seed(4),
         };
       default:
         return {
