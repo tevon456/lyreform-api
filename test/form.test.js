@@ -5,6 +5,7 @@ const { testHelper } = require("./util");
 const expect = require("chai").expect;
 
 let user = new testHelper();
+let user2 = new testHelper();
 chai.use(chaiHttp);
 
 describe("Form endpoint testing", () => {
@@ -13,6 +14,23 @@ describe("Form endpoint testing", () => {
       .request(app)
       .post("/v1/auth/register")
       .send(user.registration())
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          console.log(res);
+          return done(err);
+        }
+        expect(res.status).to.equal(201);
+        expect(res.body).to.have.property("message");
+        done();
+      });
+  });
+
+  it("should 'register' a second user", (done) => {
+    chai
+      .request(app)
+      .post("/v1/auth/register")
+      .send(user2.registration())
       .end((err, res) => {
         if (err) {
           console.log(err);
@@ -43,7 +61,25 @@ describe("Form endpoint testing", () => {
       });
   });
 
-  it("should login user", (done) => {
+  it("should 'confirm' a second user account using email confirmation token", async () => {
+    const tokenDocument = await user2.getConfirmationToken();
+    const token = tokenDocument.token;
+
+    chai
+      .request(app)
+      .post(`/v1/auth/account-confirmation/?token=${token}`)
+      .send()
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          return done(err);
+        }
+        expect(res.status).to.equal(200);
+        expect(res.body).to.have.property("message");
+      });
+  });
+
+  it("should login the first user", (done) => {
     setTimeout(() => {
       chai
         .request(app)
@@ -57,6 +93,31 @@ describe("Form endpoint testing", () => {
           user.setAccessToken(res.body.tokens.access.token);
           user.setRefreshToken(res.body.tokens.refresh.token);
           user.setUserUUID(res.body.user.uuid);
+          expect(res.status).to.equal(200);
+          expect(res.body).to.have.property("user");
+          expect(res.body).to.have.property("tokens");
+          expect(res.body.tokens).to.have.property("access");
+          expect(res.body.tokens).to.have.property("refresh");
+          expect(res.body.user).to.not.have.property("password");
+          done();
+        });
+    }, 500);
+  });
+
+  it("should login the second user", (done) => {
+    setTimeout(() => {
+      chai
+        .request(app)
+        .post(`/v1/auth/login`)
+        .send(user2.getUserLogin())
+        .end((err, res) => {
+          if (err) {
+            console.log(err);
+            return done(err);
+          }
+          user2.setAccessToken(res.body.tokens.access.token);
+          user2.setRefreshToken(res.body.tokens.refresh.token);
+          user2.setUserUUID(res.body.user.uuid);
           expect(res.status).to.equal(200);
           expect(res.body).to.have.property("user");
           expect(res.body).to.have.property("tokens");
@@ -84,7 +145,7 @@ describe("Form endpoint testing", () => {
       });
   });
 
-  it("should fail create a new form with malformed data", (done) => {
+  it("should fail to create a new form with malformed data", (done) => {
     chai
       .request(app)
       .post("/v1/form")
@@ -201,6 +262,25 @@ describe("Form endpoint testing", () => {
         expect(res.body).to.have.property("fields");
         expect(res.body).to.have.property("createdAt");
         expect(res.body).to.have.property("updatedAt");
+        done();
+      });
+  });
+
+  it("should fail update a form with owned by another user", (done) => {
+    chai
+      .request(app)
+      .patch(`/v1/form/${user.form_ids[0]}`)
+      .set("Authorization", `Bearer ${user2.access}`)
+      .send(user2.generateForm())
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          return done(err);
+        }
+        expect(res.status).to.equal(403);
+        expect(res.status).to.not.equal(201);
+        expect(res.status).to.not.equal(500);
+        expect(res.body).to.have.property("message");
         done();
       });
   });
@@ -372,6 +452,61 @@ describe("Form endpoint testing", () => {
         expect(res.body.current_page).to.be.a("number");
         expect(res.body).to.have.property("total_pages");
         expect(res.body.total_pages).to.be.a("number");
+        done();
+      });
+  });
+
+  it("should fail to delete a form that doesn't exist", (done) => {
+    chai
+      .request(app)
+      .delete(`/v1/form/${user.form_ids[0]}ee`)
+      .set("Authorization", `Bearer ${user.access}`)
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          console.log(res.body);
+          return done(err);
+        }
+        expect(res.status).to.equal(400);
+        expect(res.status).to.not.equal(201);
+        expect(res.status).to.not.equal(500);
+        expect(res.body).to.have.property("message");
+        done();
+      });
+  });
+
+  it("should fail to delete another user's form", (done) => {
+    chai
+      .request(app)
+      .delete(`/v1/form/${user.form_ids[0]}`)
+      .set("Authorization", `Bearer ${user2.access}`)
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          return done(err);
+        }
+        expect(res.status).to.equal(403);
+        expect(res.status).to.not.equal(201);
+        expect(res.status).to.not.equal(500);
+        expect(res.body).to.have.property("message");
+        done();
+      });
+  });
+
+  it("should delete a form owned by the user", (done) => {
+    chai
+      .request(app)
+      .delete(`/v1/form/${user.form_ids[0]}`)
+      .set("Authorization", `Bearer ${user.access}`)
+      .end((err, res) => {
+        if (err) {
+          console.log(err);
+          return done(err);
+        }
+        expect(res.status).to.equal(204);
+        expect(res.status).to.not.equal(400);
+        expect(res.status).to.not.equal(200);
+        expect(res.status).to.not.equal(500);
         done();
       });
   });
