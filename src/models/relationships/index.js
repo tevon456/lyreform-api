@@ -1,4 +1,4 @@
-function Relationships({ User, Token, Form, ...rest }) {
+function Relationships({ User, Token, Form, Submission }) {
   // User Token Relationship
   User.hasMany(Token, {
     foreignKey: "user_id",
@@ -12,6 +12,13 @@ function Relationships({ User, Token, Form, ...rest }) {
     onDelete: "CASCADE",
   });
   Form.belongsTo(User);
+
+  // Form Submission Relationship
+  Form.hasMany(Submission, {
+    foreignKey: "form_id",
+    onDelete: "CASCADE",
+  });
+  Submission.belongsTo(Form);
 }
 
 module.exports = Relationships;
