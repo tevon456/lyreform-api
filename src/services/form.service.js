@@ -124,7 +124,7 @@ const deleteFormById = async (formId) => {
   if (!form) {
     throw new ApiError(httpStatus.NOT_FOUND, "Form not found");
   }
-  return await form.destroy();
+  return form.destroy();
 };
 
 module.exports = {
