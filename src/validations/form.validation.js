@@ -18,7 +18,20 @@ const createForm = {
         id: Joi.string().required(),
         name: Joi.string().required(),
         label: Joi.string().required(),
-        field_type: Joi.string().required(),
+        field_type: Joi.string()
+          .required()
+          .valid(
+            "SHORT_ANSWER",
+            "LONG_ANSWER",
+            "DATE",
+            "NUMBER",
+            "EMAIL",
+            "DROPDOWN_SELECT",
+            "RADIO_GROUP",
+            "CHECKBOX_GROUP",
+            "SIGNATURE",
+            "RICH_TEXT"
+          ),
         placeholder: Joi.string(),
         min: Joi.number(),
         max: Joi.number(),
