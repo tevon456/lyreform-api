@@ -59,16 +59,20 @@ const saveToken = async (token, userId, expires, type, blacklisted = false) => {
  * @returns {Promise<Token>}
  */
 const verifyToken = async (token, type) => {
-  const payload = jwt.verify(token, config.jwt.secret);
-  const tokenDocument = await Token.findOne({
-    where: {
-      [Op.and]: [{ token: token }, { user_id: payload.sub }, { type: type }],
-    },
-  });
-  if (!tokenDocument) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, "This token is inavlid");
+  try {
+    const payload = jwt.verify(token, config.jwt.secret);
+    const tokenDocument = await Token.findOne({
+      where: {
+        [Op.and]: [{ token: token }, { user_id: payload.sub }, { type: type }],
+      },
+    });
+    if (!tokenDocument) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, "This token is invalid");
+    }
+    return tokenDocument;
+  } catch (error) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "This token is invalid");
   }
-  return tokenDocument;
 };
 
 /**
