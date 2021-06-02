@@ -1,0 +1,14 @@
+{
+  "name": "lyre",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "boot": "npm link"
+  },
+  "bin": {
+    "lyre": "./bin/index.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
