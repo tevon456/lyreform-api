@@ -7,7 +7,7 @@
   "scripts": {
     "start": "pm2 start ecosystem.config.json --no-daemon",
     "dev": "cross-env NODE_ENV=development nodemon src/index.js",
-    "migrate": "sequelize-cli db:migrate",
+    "migrate": "cross-env NODE_ENV=development sequelize-cli db:migrate",
     "migrate:reset": "sequelize-cli db:migrate:undo:all && npm run migrate",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles",
     "pretest": "cross-env NODE_ENV=test npm run migrate:reset"
