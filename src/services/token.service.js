@@ -175,8 +175,9 @@ const generateResetPasswordToken = async (email) => {
     await existingToken.destroy();
     return prepareToken();
   }
-
-  return existingToken;
+  if (existingToken) {
+    return existingToken.token;
+  }
 };
 
 /**
