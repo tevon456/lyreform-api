@@ -19,7 +19,7 @@ const register = catchAsync(async (req, res) => {
     userConfirmationToken
   );
   res.status(httpStatus.CREATED).send({
-    message: `Account created succesfully, check your email for account activation link`,
+    message: `Account created successfully, check your email for account activation link`,
   });
 });
 
