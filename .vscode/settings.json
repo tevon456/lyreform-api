@@ -13,7 +13,13 @@
         "titleBar.activeBackground": "#3b5249",
         "titleBar.activeForeground": "#e7e7e7",
         "titleBar.inactiveBackground": "#3b524999",
-        "titleBar.inactiveForeground": "#e7e7e799"
+        "titleBar.inactiveForeground": "#e7e7e799",
+        "editorGroup.border": "#507063",
+        "panel.border": "#507063",
+        "sash.hoverBorder": "#507063",
+        "sideBar.border": "#507063",
+        "statusBarItem.remoteBackground": "#3b5249",
+        "statusBarItem.remoteForeground": "#e7e7e7"
     },
     "peacock.color": "3b5249",
     "sqltools.connections": [
