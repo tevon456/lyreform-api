@@ -32,7 +32,7 @@ const createForm = {
             "SIGNATURE",
             "RICH_TEXT"
           ),
-        placeholder: Joi.string(),
+        placeholder: Joi.string().allow(null),
         min: Joi.number(),
         max: Joi.number(),
         required: Joi.boolean().required(),
@@ -95,7 +95,7 @@ const updateForm = {
             "SIGNATURE",
             "RICH_TEXT"
           ),
-        placeholder: Joi.string(),
+        placeholder: Joi.string().allow(null),
         min: Joi.number(),
         max: Joi.number(),
         required: Joi.boolean().required(),
