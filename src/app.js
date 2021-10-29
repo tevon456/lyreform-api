@@ -39,6 +39,9 @@ if (config.env !== "test") {
   app.use(morgan.errorHandler);
 }
 
+// The error handler must be before any other error middleware and after all controllers
+app.use(Sentry.Handlers.errorHandler());
+
 // set security HTTP headers
 app.use(helmet());
 
@@ -50,7 +53,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // sanitize request data
 app.use(xss());
-// app.use(mongoSanitize());
 
 // gzip compression
 app.use(compression());
@@ -81,9 +83,6 @@ app.use("/v1", defaultLimiter, routes);
 app.use("/favicon.ico", (req, res, next) => {
   res.status(204).end();
 });
-
-// The error handler must be before any other error middleware and after all controllers
-app.use(Sentry.Handlers.errorHandler());
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
