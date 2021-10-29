@@ -16,33 +16,22 @@ const differenceInHours = require("date-fns/differenceInHours");
  * @returns {Promise<User>}
  */
 const loginUserWithEmailAndPassword = async (email, password) => {
-  try {
-    const user = await userService.getUserByEmail(email);
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      throw new ApiError(
-        httpStatus.UNAUTHORIZED,
-        "Incorrect email or password"
-      );
-    }
-    if (user.active == false) {
-      throw new ApiError(
-        httpStatus.UNAUTHORIZED,
-        "This account has been banned"
-      );
-    }
-    if (user.verified == false) {
-      throw new ApiError(
-        httpStatus.UNAUTHORIZED,
-        "Please verify your account by clicking the link sent to your email"
-      );
-    }
-    return user;
-  } catch (error) {
+  const user = await userService.getUserByEmail(email);
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, "Incorrect email or password");
+  }
+
+  if (!user.active) {
+    console.log("APE :", user.active);
+    throw new ApiError(httpStatus.UNAUTHORIZED, "This account has been banned");
+  }
+  if (user.verified == false) {
     throw new ApiError(
-      httpStatus.INTERNAL_SERVER_ERROR,
-      "Internal Server Error"
+      httpStatus.UNAUTHORIZED,
+      "Please verify your account by clicking the link sent to your email"
     );
   }
+  return user;
 };
 
 /**

@@ -126,25 +126,27 @@ describe("Authenticate rest endpoint testing", () => {
   });
 
   it("should login user", (done) => {
-    chai
-      .request(app)
-      .post(`/v1/auth/login`)
-      .send(user.getUserLogin())
-      .end((err, res) => {
-        if (err) {
-          console.log(err);
-          return done(err);
-        }
-        user.setAccessToken(res.body.tokens.access.token);
-        user.setRefreshToken(res.body.tokens.refresh.token);
-        expect(res.status).to.equal(200);
-        expect(res.body).to.have.property("user");
-        expect(res.body).to.have.property("tokens");
-        expect(res.body.tokens).to.have.property("access");
-        expect(res.body.tokens).to.have.property("refresh");
-        expect(res.body.user).to.not.have.property("password");
-        done();
-      });
+    setTimeout(() => {
+      chai
+        .request(app)
+        .post(`/v1/auth/login`)
+        .send(user.getUserLogin())
+        .end((err, res) => {
+          if (err) {
+            console.log(err);
+            return done(err);
+          }
+          user.setAccessToken(res.body.tokens.access.token);
+          user.setRefreshToken(res.body.tokens.refresh.token);
+          expect(res.status).to.equal(200);
+          expect(res.body).to.have.property("user");
+          expect(res.body).to.have.property("tokens");
+          expect(res.body.tokens).to.have.property("access");
+          expect(res.body.tokens).to.have.property("refresh");
+          expect(res.body.user).to.not.have.property("password");
+          done();
+        });
+    }, 900);
   });
 
   it("should return an error on bad auth token refresh", (done) => {
