@@ -96,8 +96,8 @@ const updateForm = {
             "RICH_TEXT"
           ),
         placeholder: Joi.string().allow(null, ""),
-        min: Joi.number(),
-        max: Joi.number(),
+        min: Joi.alternatives(Joi.string(), Joi.number()).allow(null, ""),
+        max: Joi.alternatives(Joi.string(), Joi.number()).allow(null, ""),
         required: Joi.boolean().required(),
         options: Joi.array().items({
           value: Joi.alternatives().try(Joi.string(), Joi.array()),
