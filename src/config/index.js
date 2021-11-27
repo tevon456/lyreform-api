@@ -24,6 +24,10 @@ const config = {
   sentry: {
     dsn: process.env.SENTRY_DSN,
   },
+  recaptcha: {
+    site: process.env.RECAPTCHA_SITE_KEY,
+    secret: process.env.RECAPTCHA_SECRET_KEY,
+  },
 };
 
 module.exports = config;
