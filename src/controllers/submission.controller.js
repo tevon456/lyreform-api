@@ -13,7 +13,7 @@ const createSubmission = catchAsync(async (req, res) => {
   } else {
     let submissionBody = { ...req.body, form_id: form.id };
     const submission = await submissionService.createSubmission(submissionBody);
-    res.status(httpStatus.CREATED).send(submission);
+    res.status(httpStatus.CREATED).send({message:"response successful"});
   }
 });
 
