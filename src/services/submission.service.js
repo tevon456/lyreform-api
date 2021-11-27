@@ -2,6 +2,8 @@ const httpStatus = require("http-status");
 const { Submission, Form } = require("../models");
 const { Op } = require("sequelize");
 const ApiError = require("../utils/ApiError");
+const config = require("../config");
+const { default: axios } = require("axios");
 
 /**
  * Create a submission
@@ -116,10 +118,29 @@ const deleteSubmissionById = async (submissionId) => {
   return submission.destroy();
 };
 
+/**
+ * verify validity a submission for spam
+ * @param {string} token
+ * @returns {Promise<Object>}
+ */
+const verifySubmissionRecaptchaResponse = async (token) => {
+  let payload = {
+    secret: config.recaptcha.secret,
+    response: token,
+  };
+  return axios({
+    method: "post",
+    url: `https://www.google.com/recaptcha/api/siteverify`,
+    data: new URLSearchParams(Object.entries(payload)).toString(),
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  });
+};
+
 module.exports = {
   createSubmission,
   getFormSubmissions,
   getSubmissionById,
   updateSubmissionById,
   deleteSubmissionById,
+  verifySubmissionRecaptchaResponse,
 };
