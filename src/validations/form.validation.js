@@ -4,7 +4,7 @@ const { color } = require("./custom.validation");
 const createForm = {
   body: Joi.object().keys({
     name: Joi.string().max(128).min(3).required(),
-    logo_url: Joi.string().allow(null,""),
+    logo_url: Joi.string().allow(null, ""),
     published: Joi.boolean().required(),
     header_foreground: Joi.string().required().custom(color),
     header_background: Joi.string().required().custom(color),
@@ -66,7 +66,7 @@ const updateForm = {
   }),
   body: Joi.object().keys({
     name: Joi.string().max(128).min(3).required(),
-    logo_url: Joi.string().allow(null,""),
+    logo_url: Joi.string().allow(null, ""),
     published: Joi.boolean().required(),
     header_foreground: Joi.string().required().custom(color),
     header_background: Joi.string().required().custom(color),
