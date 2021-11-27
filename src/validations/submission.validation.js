@@ -4,6 +4,7 @@ const createSubmission = {
   body: Joi.object().keys({
     data: Joi.object().required(),
     formId: Joi.string().required(),
+    token: Joi.string().allow(null, ""),
   }),
 };
 
