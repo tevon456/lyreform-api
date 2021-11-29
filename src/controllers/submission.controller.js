@@ -3,6 +3,7 @@ const pick = require("../utils/pick");
 const ApiError = require("../utils/ApiError");
 const catchAsync = require("../utils/catchAsync");
 const { submissionService, formService } = require("../services");
+const { token } = require("morgan");
 
 const createSubmission = catchAsync(async (req, res) => {
   const form = await formService.getFormByUUID(req.body.formId);
@@ -11,9 +12,22 @@ const createSubmission = catchAsync(async (req, res) => {
   } else if (!form.published) {
     throw new ApiError(httpStatus.NOT_FOUND, "Form not found");
   } else {
-    let submissionBody = { ...req.body, form_id: form.id };
-    const submission = await submissionService.createSubmission(submissionBody);
-    res.status(httpStatus.CREATED).send({message:"response successful"});
+    const submissionBody = { ...req.body, form_id: form.id };
+    const recaptchaResponse = await submissionService.verifySubmissionRecaptchaResponse(
+      req.body.token
+    );
+    if (recaptchaResponse.data.success) {
+      // ensure the verification was successful
+      if (recaptchaResponse.data.score >= 0.5) {
+        // minimum threshold for spam
+        await submissionService.createSubmission(submissionBody);
+        res.status(httpStatus.CREATED).send({ message: "response successful" });
+      } else {
+        // discard other form responses
+        res.status(httpStatus.CREATED).send({ message: "response successful" });
+      }
+    }
+    res.status(httpStatus.BAD_REQUEST).send({ message: "captcha failed" });
   }
 });
 
