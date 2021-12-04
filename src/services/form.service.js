@@ -87,13 +87,21 @@ const getUserForms = async (userId, filter, options) => {
     order: sort,
     offset: offset,
     limit: limit,
-
     include: [
       {
         model: Submission,
         attributes: ["createdAt"],
       },
     ],
+    distinct: true,
+  });
+
+  console.log({
+    total_results: count,
+    results: rows,
+    limit,
+    current_page: page,
+    total_pages: Math.ceil(count / limit),
   });
 
   return {
