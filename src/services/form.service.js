@@ -1,6 +1,6 @@
 const httpStatus = require("http-status");
-const { Form } = require("../models");
-const { Op } = require("sequelize");
+const { Form, Submission } = require("../models");
+const { Op, Sequelize } = require("sequelize");
 const ApiError = require("../utils/ApiError");
 
 /**
@@ -87,6 +87,13 @@ const getUserForms = async (userId, filter, options) => {
     order: sort,
     offset: offset,
     limit: limit,
+
+    include: [
+      {
+        model: Submission,
+        attributes: ["createdAt"],
+      },
+    ],
   });
 
   return {
