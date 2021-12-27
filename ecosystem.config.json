@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "name": "lyreform-api-postgress",
+      "name": "lyreform-api-postgres",
       "script": "src/index.js",
       "instances": 1,
       "autorestart": true,
