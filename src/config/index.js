@@ -1,7 +1,7 @@
 const database = require("./config");
 const config = {
   env: process.env.NODE_ENV,
-  port: process.env.PORT,
+  port: process.env.PORT || 8000,
   jwt: {
     secret: process.env.JWT_SECRET,
     access_expiration_minutes: process.env.JWT_ACCESS_EXPIRATION_MINUTES,
