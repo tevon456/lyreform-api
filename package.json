@@ -1,5 +1,5 @@
 {
-  "name": "lyreform-api-postgres-test-again",
+  "name": "lyreform-api",
   "version": "1.0.0",
   "repository": "",
   "description": "express js api service using postgressql for persistance",
