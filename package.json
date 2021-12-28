@@ -5,8 +5,7 @@
   "description": "express js api service using postgressql for persistance",
   "main": "index.js",
   "scripts": {
-    "start": "node --optimize_for_size --max_old_space_size=460 --gc_interval=100 server.js",
-    "prestart": "npm run migrate",
+    "start": "node --optimize_for_size --max_old_space_size=460 --gc_interval=100 pm2 start src/index.js",
     "dev": "cross-env NODE_ENV=development pm2 start src/index.js",
     "migrate": "cross-env NODE_ENV=development sequelize-cli db:migrate",
     "migrate:reset": "sequelize-cli db:migrate:undo:all && npm run migrate",
