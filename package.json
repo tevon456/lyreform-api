@@ -13,7 +13,7 @@
     "dev:migrate:reset": "cross-env NODE_ENV=development sequelize-cli db:migrate:undo:all && npm run migrate",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles",
     "pretest": "cross-env NODE_ENV=test npm run migrate:reset",
-    "postinstall": "npm run sequelize-cli db:migrate"
+    "poststart": "npm run migrate:production"
   },
   "jest": {
     "testEnvironment": "node",
