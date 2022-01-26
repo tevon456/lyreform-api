@@ -26,7 +26,7 @@ if (config.env !== "test") {
  */
 const sendEmail = async (to, subject, text, html) => {
   try {
-    const msg = { from: config.email.from, to, subject, text, html };
+    const msg = { from: config.email.email_from, to, subject, text, html };
     await transport.sendMail(msg);
   } catch (error) {
     logger.error(error);
