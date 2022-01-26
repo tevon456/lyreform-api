@@ -42,7 +42,7 @@ const sendEmail = async (to, subject, text, html) => {
 const sendResetPasswordEmail = async (to, token) => {
   const subject = "Reset password";
   // replace this url with the link to the reset password page of your front-end app
-  const resetPasswordUrl = `https://app.lyreform.com/reset-password?token=${token}`;
+  const resetPasswordUrl = `https://app.lyreform.com/new-password/${token}`;
   const text = `Dear user,
   To reset your password, click on this link: ${resetPasswordUrl}
   If you did not request any password resets, then ignore this email.`;
@@ -60,7 +60,7 @@ const sendResetPasswordEmail = async (to, token) => {
 const sendAccountConfirmationEmail = async (to, name, token) => {
   try {
     const subject = "Confirm Account";
-    const accountConfirmationUrl = `https://app.lyreform.com/verify-account/?token=${token}`;
+    const accountConfirmationUrl = `https://app.lyreform.com/verify-account/${token}`;
     const text = `Dear user,
   To confirm your email address, click on this link: ${accountConfirmationUrl}
   If you did not signup for Lyreform, then ignore this email.`;
