@@ -78,15 +78,16 @@ const verifyToken = async (token, type) => {
 /**
  * Generate auth tokens
  * @param {User} user
+ * @param {object} tokenPayload additional data to be stored in token
  * @returns {Promise<Object>}
  */
-const generateAuthTokens = async (user) => {
+const generateAuthTokens = async (user, tokenPayload = {}) => {
   const accessTokenExpires = addMinutes(
     new Date(),
     config.jwt.access_expiration_minutes
   );
   const accessToken = generateToken(
-    { bundle: { type: "access" }, user },
+    { bundle: { type: "access", ...tokenPayload }, user },
     accessTokenExpires
   );
 
