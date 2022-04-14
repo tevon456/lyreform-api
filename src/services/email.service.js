@@ -40,14 +40,17 @@ const sendEmail = async (to, subject, text, html) => {
  * @returns {Promise}
  */
 const sendResetPasswordEmail = async (to, token) => {
-  const subject = "Reset password";
-  // replace this url with the link to the reset password page of your front-end app
-  const resetPasswordUrl = `https://app.lyreform.com/new-password/${token}`;
-  const text = `Dear user,
-  To reset your password, click on this link: ${resetPasswordUrl}
-  If you did not request any password resets, then ignore this email.`;
-  const html = passwordResetTemplate(resetPasswordUrl);
-  await sendEmail(to, subject, text, html);
+  try {
+    const subject = "Reset password";
+    const resetPasswordUrl = `https://app.lyreform.com/new-password/${token}`;
+    const text = `Dear user,
+    To reset your password, click on this link: ${resetPasswordUrl}
+    If you did not request any password resets, then ignore this email.`;
+    const html = passwordResetTemplate({ resetPasswordUrl });
+    await sendEmail(to, subject, text, html);
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 /**
@@ -64,7 +67,7 @@ const sendAccountConfirmationEmail = async (to, name, token) => {
     const text = `Dear user,
   To confirm your email address, click on this link: ${accountConfirmationUrl}
   If you did not signup for Lyreform, then ignore this email.`;
-    const html = confirmationTemplate(name, accountConfirmationUrl);
+    const html = confirmationTemplate({ name, accountConfirmationUrl });
     await sendEmail(to, subject, text, html);
   } catch (error) {
     console.log(error);
