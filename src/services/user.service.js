@@ -46,7 +46,7 @@ const getUserById = async (id) => {
  * @param {string} uuid
  * @returns {Promise<User>}
  */
-const getUserByUuid = async (uuid) => {
+const getUserByUUID = async (uuid) => {
   return User.findOne({ where: { uuid } });
 };
 
@@ -88,7 +88,7 @@ module.exports = {
   createUser,
   getUserById,
   getUserByEmail,
-  getUserByUuid,
+  getUserByUUID,
   getUserIdFromUUID,
   updateUserById,
   isEmailTaken,

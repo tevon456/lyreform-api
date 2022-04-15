@@ -8,7 +8,7 @@ const getUser = catchAsync(async (req, res) => {
   if (!isAuthUser(req.params.userId, req)) {
     throw new ApiError(httpStatus.FORBIDDEN, "Not authorized");
   }
-  const user = await userService.getUserByUuid(req.params.userId);
+  const user = await userService.getUserByUUID(req.params.userId);
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, "User not found");
   }
@@ -19,9 +19,9 @@ const updateUser = catchAsync(async (req, res) => {
   if (!isAuthUser(req.params.userId, req)) {
     throw new ApiError(httpStatus.FORBIDDEN, "Not authorized");
   }
-  const userId = await userService.getUserIdFromUUID(req.params.userId);
-  const user = await userService.updateUserById(userId, req.body);
-  res.send(user);
+  const user = await userService.getUserByUUID(req.params.userId);
+  const updatedUser = await userService.updateUserById(user?.id, req.body);
+  res.send(updatedUser);
 });
 
 const deleteUser = catchAsync(async (req, res) => {
