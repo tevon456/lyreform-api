@@ -24,7 +24,6 @@
   "author": "tevon456",
   "license": "ISC",
   "dependencies": {
-    "@hapi/joi": "^17.1.1",
     "@sentry/node": "^6.15.0",
     "@sentry/tracing": "^6.15.0",
     "axios": "^0.24.0",
@@ -41,6 +40,7 @@
     "handlebars": "^4.7.7",
     "helmet": "^4.6.0",
     "http-status": "^1.5.0",
+    "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
     "mjml": "^4.11.0",
     "morgan": "^1.10.0",
