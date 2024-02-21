@@ -26,7 +26,7 @@
   "dependencies": {
     "@sentry/node": "^6.15.0",
     "@sentry/tracing": "^6.15.0",
-    "axios": "^0.24.0",
+    "axios": "^0.28.0",
     "bcryptjs": "^2.4.3",
     "chai-http": "^4.3.0",
     "chroma-js": "^2.1.2",
